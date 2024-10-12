@@ -1,0 +1,36 @@
+You are given an m x n binary matrix grid. An island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
+
+The area of an island is the number of cells with a value 1 in the island.
+
+Return the maximum area of an island in grid. If there is no island, return 0.
+
+Input: grid = [[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]
+Output: 6
+
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+        stack = []
+        directions = ((1,0), (0,1), (0,-1), (-1,0))
+        max_area = 0
+
+        seen = [[False]*cols for _ in range(rows)]
+
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1 and not seen[row][col]:
+                    area = 0
+                    stack.append([row,col])
+                    seen[row][col] = True
+                    while stack:
+                        r, c = stack.pop()
+                        area += 1
+                        for nr, nc in directions:
+                            if 0<=r+nr<rows and 0<=c+nc<cols and grid[r+nr][c+nc]==1 and not seen[r+nr][c+nc]:
+                                stack.append([r+nr, c+nc])
+                                seen[r+nr][c+nc] = True
+                    
+                    max_area = max(max_area, area)
+        
+        return max_area
